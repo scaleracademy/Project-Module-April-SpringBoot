@@ -1,37 +1,43 @@
 package com.scaler.springboot1.task;
 
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.ArrayList;
+
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
-
-    List<Task> taskList = new ArrayList<>();
-    private int nextTaskId = 1;
-
-    @GetMapping("")
-    List<Task> getAllTasks(){
-        return taskList;
+  private final TasksService tasksService;
+    public TaskController(TasksService tasksService) {
+        this.tasksService = tasksService;
     }
 
-    @PostMapping("")
-    Task createTask(@RequestBody Task task){
-        task.setId(nextTaskId++);
-        taskList.add(task);
-        return task;
+  @GetMapping("")
+    ResponseEntity<List<Task>> getAllTasks() {
+        var tasks = tasksService.getAllTasks();
+        return ResponseEntity.ok(tasks);
+    }
+   @PostMapping("")
+    ResponseEntity<Task> createTask(@RequestBody Task task) {
+        var createdTask = tasksService.createTask(task);
+        return ResponseEntity.ok(createdTask);
+    }
+   @GetMapping("/{id}")
+    ResponseEntity<Task> getTaskById(@PathVariable("id") Integer id) {
+        var task = tasksService.getTaskById(id);
+        return ResponseEntity.ok(task);
     }
 
-    @GetMapping("/{id}")
-    Task getTaskById(@PathVariable("id") Integer id){
-     Task foundTask = taskList.stream().filter(
-             task -> task.getId().equals(id))
-             .findFirst().orElse(null);
+    //Todo 1: implement Update Task - PATCh
+    // Todo 2: implement Delete Task - DELETE
+    // Todo5: create a ResponseBodyDTO - only return name, dueDate, completed
 
-        return foundTask;
+    // Todo3 - handle expection for IllegalArgumentException ( due date, name)
+    // Todo4 - in error responses, also send the error message in the response body
+    @ExceptionHandler(TasksService.TaskNotFoundException.class)
+    ResponseEntity<String> handleTaskNotFoundException(TasksService.TaskNotFoundException e) {
+        return ResponseEntity.notFound().build();
     }
-
-
 }
