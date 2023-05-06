@@ -11,10 +11,9 @@ import java.util.Date;
 @Getter
 @Setter
 @AllArgsConstructor
-
 public class Task {
-Integer id;
-String name;
-Date dueDate;
-Boolean completed;
+    Integer id;
+    String name;
+    Date dueDate;
+    Boolean completed;
 }
