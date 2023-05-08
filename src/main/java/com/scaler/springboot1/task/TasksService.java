@@ -1,5 +1,6 @@
 package com.scaler.springboot1.task;
 
+import com.scaler.springboot1.task.dtos.ResponseBodyDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -49,9 +50,18 @@ public class TasksService {
         return task;
     }
 
-    public void deleteTask(Integer id) {
+    public Task deleteTask(Integer id) {
         Task task = getTaskById(id);
         taskList.remove(task);
+        return task;
+    }
+
+    private ResponseBodyDTO generateResponseBodyDTO(Task task){
+        ResponseBodyDTO responseTaskDTO = new ResponseBodyDTO();
+        responseTaskDTO.setName(task.getName());
+        responseTaskDTO.setDueDate(task.getDueDate());
+        responseTaskDTO.setCompleted(task.getCompleted());
+        return responseTaskDTO;
     }
 
     /*
@@ -60,7 +70,7 @@ Create a new class for Exception handling that extemdomg Runtime/IllegalStateExc
 */
     public static class TaskNotFoundException extends IllegalStateException {
         public TaskNotFoundException(Integer id) {
-            super("Task with id" + id + "not found");
+            super("Task with id " + id + " not found");
         }
     }
 
