@@ -2,8 +2,10 @@ package com.scaler.springboot1.task.dtos;
 
 import lombok.*;
 
+import java.util.Date;
+
 @Data
 public class UpdateTaskDTO{
-    String dueDate;
+    Date dueDate;
     Boolean completed;
 }
