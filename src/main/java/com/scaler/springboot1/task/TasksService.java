@@ -49,9 +49,10 @@ public class TasksService {
         return task;
     }
 
-    public void deleteTask(Integer id) {
+    public Task deleteTask(Integer id) {
         Task task = getTaskById(id);
         taskList.remove(task);
+        return task;
     }
 
     /*

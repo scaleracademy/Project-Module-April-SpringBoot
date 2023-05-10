@@ -31,7 +31,16 @@ public class TaskController {
     }
 
     //Todo 1: implement Update Task - PATCh
+    @PatchMapping("/update/{id}")
+    ResponseEntity<Task> updateTask(@PathVariable Integer id, @RequestBody Task task){
+        var task1 = tasksService.updateTask(id, task.getDueDate(), task.getCompleted());
+        return ResponseEntity.ok(task1);
+    }
     // Todo 2: implement Delete Task - DELETE
+    @DeleteMapping("/{id}")
+    ResponseEntity<Task> deleteTaskById(@PathVariable("id") Integer id){
+        return ResponseEntity.ok(tasksService.deleteTask(id));
+    }
     // Todo5: create a ResponseBodyDTO - only return name, dueDate, completed
 
     // Todo3 - handle expection for IllegalArgumentException ( due date, name)
