@@ -1,18 +1,23 @@
 package com.scaler.springboot1.task;
 
+import com.scaler.springboot1.task.dtos.CreateTaskDTO;
+import com.scaler.springboot1.task.dtos.TaskDTO;
+import com.scaler.springboot1.task.dtos.UpdateTaskDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TasksService {
     List<Task> taskList = new ArrayList<>();
     private int nextTaskId = 0;
 
-    public List<Task> getAllTasks() {
-        return taskList;
+    public List<TaskDTO> getAllTasks() {
+        List<TaskDTO> taskDTOs = this.taskList.stream().map(t->this.taskToDTO(t)).collect(Collectors.toList());
+        return taskDTOs;
     }
 
     public Task getTaskById(Integer id) {
@@ -29,29 +34,39 @@ public class TasksService {
         throw new TaskNotFoundException(id);
     }
 
-    public Task createTask(Task task) {
+    public CreateTaskDTO createTask(Task task) {
         task.setId(nextTaskId++);
         taskList.add(task);
-        return task;
+        CreateTaskDTO createTaskDTO = this.taskToCreateDTO(task);
+        return createTaskDTO;
     }
 
 
-    public Task updateTask(Integer id, Date dueDate, Boolean completed) {
-        Task task = getTaskById(id);
-        if (dueDate != null) {
-            task.setDueDate(dueDate);
+    public UpdateTaskDTO updateTask(Integer id, Task task) {
+        Task currentTask = getTaskById(id);
+        if(task.name != null){
+            currentTask.name = task.name;
         }
-
-        if (completed != null) {
-            task.setCompleted(completed);
+        if(task.dueDate != null){
+            currentTask.dueDate = task.dueDate;
         }
-
-        return task;
+        if(task.completed != null){
+            currentTask.completed = task.completed;
+        }
+        UpdateTaskDTO updateTaskDTO = this.taskToUpdateDTO(task);
+        return updateTaskDTO;
     }
 
-    public void deleteTask(Integer id) {
-        Task task = getTaskById(id);
-        taskList.remove(task);
+    public String deleteTask(Integer id) {
+        for (Task task : taskList) {
+            if (task.getId().equals(id)) {
+                Task taskToDelete = getTaskById(id);
+                taskList.remove(taskToDelete);
+                return "Task is deleted";
+            }
+        }
+
+        throw new TaskNotFoundException(id);
     }
 
     /*
@@ -64,4 +79,24 @@ Create a new class for Exception handling that extemdomg Runtime/IllegalStateExc
         }
     }
 
+    public CreateTaskDTO taskToCreateDTO(Task task){
+        CreateTaskDTO createTaskDTO = new CreateTaskDTO();
+        createTaskDTO.setName(task.getName());
+        createTaskDTO.setDueDate(task.getDueDate()) ;
+        return createTaskDTO;
+    }
+
+    public TaskDTO taskToDTO(Task task){
+        TaskDTO taskDTO = new TaskDTO();
+        taskDTO.setName(task.getName());
+        taskDTO.setDueDate(task.getDueDate()) ;
+        return taskDTO;
+    }
+
+    public UpdateTaskDTO taskToUpdateDTO(Task task){
+        UpdateTaskDTO updateTaskDTO = new UpdateTaskDTO();
+        updateTaskDTO.setDueDate(task.getDueDate());
+        updateTaskDTO.setCompleted(task.getCompleted());
+        return updateTaskDTO;
+    }
 }
