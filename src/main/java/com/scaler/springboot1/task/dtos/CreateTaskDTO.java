@@ -2,9 +2,16 @@ package com.scaler.springboot1.task.dtos;
 
 import lombok.*;
 
+import java.util.Date;
+
 
 @Data
 public class CreateTaskDTO {
     String name;
-    String dueDate;
+    Date dueDate;
 }
+
+
+
+// sample code
+

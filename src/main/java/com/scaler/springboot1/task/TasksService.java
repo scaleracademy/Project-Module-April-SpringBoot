@@ -29,8 +29,8 @@ public class TasksService {
         throw new TaskNotFoundException(id);
     }
 
-    public Task createTask(Task task) {
-        task.setId(nextTaskId++);
+    public Task createTask(String name, Date dueDate) {
+       Task task = new Task(nextTaskId++, name, dueDate, false);
         taskList.add(task);
         return task;
     }

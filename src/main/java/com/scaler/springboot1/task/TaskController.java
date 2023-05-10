@@ -1,6 +1,7 @@
 package com.scaler.springboot1.task;
 
 
+import com.scaler.springboot1.task.dtos.CreateTaskDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,22 +10,29 @@ import java.util.List;
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
-  private final TasksService tasksService;
+    private final TasksService tasksService;
     public TaskController(TasksService tasksService) {
         this.tasksService = tasksService;
     }
 
-  @GetMapping("")
+    @GetMapping("")
     ResponseEntity<List<Task>> getAllTasks() {
         var tasks = tasksService.getAllTasks();
         return ResponseEntity.ok(tasks);
     }
-   @PostMapping("")
-    ResponseEntity<Task> createTask(@RequestBody Task task) {
-        var createdTask = tasksService.createTask(task);
+//    @PostMapping("")
+//    ResponseEntity<Task> createTask(@RequestBody Task task) {
+//        var createdTask = tasksService.createTask(task);
+//        return ResponseEntity.ok(createdTask);
+//    }
+
+    @PostMapping("")
+    ResponseEntity<Task> createTask(@RequestBody CreateTaskDTO createTaskDTO) {
+        var createdTask = tasksService.createTask(createTaskDTO.getName(), createTaskDTO.getDueDate());
         return ResponseEntity.ok(createdTask);
     }
-   @GetMapping("/{id}")
+
+    @GetMapping("/{id}")
     ResponseEntity<Task> getTaskById(@PathVariable("id") Integer id) {
         var task = tasksService.getTaskById(id);
         return ResponseEntity.ok(task);
