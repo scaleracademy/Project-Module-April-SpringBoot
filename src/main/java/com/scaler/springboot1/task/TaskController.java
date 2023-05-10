@@ -1,6 +1,7 @@
 package com.scaler.springboot1.task;
 
 
+import com.scaler.springboot1.task.dtos.TaskResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class TaskController {
         return ResponseEntity.ok(tasks);
     }
    @PostMapping("")
-    ResponseEntity<Task> createTask(@RequestBody Task task) {
+    ResponseEntity<TaskResponseDTO> createTask(@RequestBody Task task) {
         var createdTask = tasksService.createTask(task);
         return ResponseEntity.ok(createdTask);
     }
@@ -31,7 +32,16 @@ public class TaskController {
     }
 
     //Todo 1: implement Update Task - PATCh
+    @PatchMapping("/update/{id}")
+    ResponseEntity<TaskResponseDTO> updateTask(@PathVariable Integer id, @RequestBody Task task){
+        var task1 = tasksService.updateTask(id, task.getDueDate(), task.getCompleted());
+        return ResponseEntity.ok(task1);
+    }
     // Todo 2: implement Delete Task - DELETE
+    @DeleteMapping("/{id}")
+    ResponseEntity<Task> deleteTaskById(@PathVariable("id") Integer id){
+        return ResponseEntity.ok(tasksService.deleteTask(id));
+    }
     // Todo5: create a ResponseBodyDTO - only return name, dueDate, completed
 
     // Todo3 - handle expection for IllegalArgumentException ( due date, name)
