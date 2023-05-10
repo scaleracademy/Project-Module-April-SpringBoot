@@ -1,5 +1,6 @@
 package com.scaler.springboot1.task;
 
+import com.scaler.springboot1.task.dtos.TaskResponseDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,14 +30,14 @@ public class TasksService {
         throw new TaskNotFoundException(id);
     }
 
-    public Task createTask(Task task) {
+    public TaskResponseDTO createTask(Task task) {
         task.setId(nextTaskId++);
         taskList.add(task);
-        return task;
+        return new TaskResponseDTO(task.getName(), task.getDueDate(), task.getCompleted());
     }
 
 
-    public Task updateTask(Integer id, Date dueDate, Boolean completed) {
+    public TaskResponseDTO updateTask(Integer id, Date dueDate, Boolean completed) {
         Task task = getTaskById(id);
         if (dueDate != null) {
             task.setDueDate(dueDate);
@@ -46,7 +47,7 @@ public class TasksService {
             task.setCompleted(completed);
         }
 
-        return task;
+        return new TaskResponseDTO(task.getName(), dueDate, completed);
     }
 
     public Task deleteTask(Integer id) {
